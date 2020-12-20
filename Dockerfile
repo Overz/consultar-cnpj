@@ -1,7 +1,10 @@
 FROM python:alpine
 
-ENV SITE_URL="https://cnpjs.rocks/cnpj/"
-ENV PORT=3000
+# docker run -p 3000:3000 -it py/teste ash
+
+RUN apk --update --no-cache add curl
+
+HEALTHCHECK --interval=5s --timeout=30s --start-period=2m CMD [ "curl", "localhost:3000/healthcheck" ] || exit 1
 
 WORKDIR /app
 COPY ./src .
