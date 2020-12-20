@@ -20,7 +20,8 @@ def main():
         body_receita = tostring(fromstring(page_receita.content))
         receita_result = soupparser.BeautifulSoup(
             body_receita, 'html.parser').text
-        receita_json = receita_result.replace('<p>', '').replace('</p>', '')
+        receita_json = receita_result[:1] + '"RECEITA_WS": true,' + \
+            receita_result[1:].replace('<p>', '').replace('</p>', '')
 
         if page_receita.status_code != MANY_REQUESTS_STATUS:
             return json.loads(receita_json), 200
@@ -47,7 +48,7 @@ def replace(li: str):
     tagA = re.compile(r'(<li><a.+>(.+)</a></li>)')
     filtered = re.sub(tagA, '', li)
     replaced = filtered.replace('<li>', '"').replace(
-        '</strong></li>', '"').replace(':', '":').replace('<strong>', '"').replace('[', '{')
+        '</strong></li>', '"').replace(':', '":').replace('<strong>', '"').replace('[', '{ "CNPJ_ROCSK": true, ')
     last_char = replaced.rfind(',')
     return replaced[:last_char] + "}"
 
